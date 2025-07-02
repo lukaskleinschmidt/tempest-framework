@@ -33,11 +33,18 @@ final class LoadDiscoveryClasses
 
     public function __invoke(): void
     {
-        $discoveries = $this->build();
+        $discoveries = $this->__build();
 
         foreach ($discoveries as $discovery) {
-            $this->applyDiscovery($discovery);
+            $this->__applyDiscovery($discovery);
         }
+    }
+    
+    public function __call(string $name, array $arguments): mixed
+    {
+        $name = ltrim($name, '__');
+
+        return debug('LoadDiscoveryClasses::' . $name, fn () => $this->{$name}(...$arguments));
     }
 
     /** @return Discovery[] */

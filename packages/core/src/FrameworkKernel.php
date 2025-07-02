@@ -34,6 +34,13 @@ final class FrameworkKernel implements Kernel
         $this->container = $container ?? $this->createContainer();
     }
 
+    public function __call(string $name, array $arguments): mixed
+    {
+        $name = ltrim($name, '__');
+
+        return debug('FrameworkKernel::' . $name, fn () => $this->{$name}(...$arguments));
+    }
+
     public static function boot(
         string $root,
         array $discoveryLocations = [],
@@ -48,18 +55,18 @@ final class FrameworkKernel implements Kernel
             discoveryLocations: $discoveryLocations,
             container: $container,
         )
-            ->validateRoot()
-            ->loadEnv()
-            ->registerEmergencyExceptionHandler()
-            ->registerShutdownFunction()
-            ->registerInternalStorage()
-            ->registerKernel()
-            ->loadComposer()
-            ->loadDiscoveryLocations()
-            ->loadConfig()
-            ->loadDiscovery()
-            ->registerExceptionHandler()
-            ->event(KernelEvent::BOOTED);
+            ->__validateRoot()
+            ->__loadEnv()
+            ->__registerEmergencyExceptionHandler()
+            ->__registerShutdownFunction()
+            ->__registerInternalStorage()
+            ->__registerKernel()
+            ->__loadComposer()
+            ->__loadDiscoveryLocations()
+            ->__loadConfig()
+            ->__loadDiscovery()
+            ->__registerExceptionHandler()
+            ->__event(KernelEvent::BOOTED);
     }
 
     public function validateRoot(): self

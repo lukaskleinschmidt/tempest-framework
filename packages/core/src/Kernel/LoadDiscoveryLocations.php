@@ -23,11 +23,18 @@ final readonly class LoadDiscoveryLocations
     public function __invoke(): void
     {
         $this->kernel->discoveryLocations = [
-            ...$this->discoverCorePackages(),
-            ...$this->discoverVendorPackages(),
-            ...$this->discoverAppNamespaces(),
+            ...$this->__discoverCorePackages(),
+            ...$this->__discoverVendorPackages(),
+            ...$this->__discoverAppNamespaces(),
             ...$this->kernel->discoveryLocations,
         ];
+    }
+
+    public function __call(string $name, array $arguments): mixed
+    {
+        $name = ltrim($name, '__');
+
+        return debug('LoadDiscoveryLocations::' . $name, fn () => $this->{$name}(...$arguments));
     }
 
     /**
